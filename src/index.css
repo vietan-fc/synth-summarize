@@ -1,96 +1,241 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Podcast Summarizer Design System - Spotify × Notion Aesthetic */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Ink color system - main grays/darks */
+    --ink-50: 210 40% 98%;
+    --ink-100: 214 32% 91%;
+    --ink-200: 213 27% 84%;
+    --ink-300: 213 19% 66%;
+    --ink-400: 215 16% 57%;
+    --ink-500: 215 14% 45%;
+    --ink-600: 215 19% 35%;
+    --ink-700: 216 28% 21%;
+    --ink-800: 221 39% 11%;
+    --ink-900: 224 71% 4%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Brand colors - blue accent system */
+    --brand-50: 214 100% 97%;
+    --brand-100: 214 95% 93%;
+    --brand-200: 213 97% 87%;
+    --brand-300: 212 96% 78%;
+    --brand-400: 213 94% 68%;
+    --brand-500: 217 91% 60%;
+    --brand-600: 221 83% 53%;
+    --brand-700: 224 76% 48%;
+    --brand-800: 226 71% 40%;
+    --brand-900: 224 64% 33%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Semantic colors */
+    --success: 142 76% 36%;
+    --success-foreground: 138 76% 97%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 48 96% 89%;
+    --error: 0 84% 60%;
+    --error-foreground: 0 86% 97%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Glass panel system */
+    --glass-bg: 0 0% 100% / 0.05;
+    --glass-border: 0 0% 100% / 0.1;
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Core semantic tokens */
+    --background: var(--ink-900);
+    --foreground: var(--ink-50);
+    
+    --card: var(--ink-800);
+    --card-foreground: var(--ink-100);
+    
+    --popover: var(--ink-800);
+    --popover-foreground: var(--ink-100);
+    
+    --primary: var(--brand-600);
+    --primary-foreground: var(--ink-50);
+    
+    --secondary: var(--ink-700);
+    --secondary-foreground: var(--ink-200);
+    
+    --muted: var(--ink-800);
+    --muted-foreground: var(--ink-400);
+    
+    --accent: var(--brand-700);
+    --accent-foreground: var(--ink-50);
+    
+    --destructive: var(--error);
+    --destructive-foreground: var(--error-foreground);
+    
+    --border: var(--ink-700);
+    --input: var(--ink-700);
+    --ring: var(--brand-600);
+    
+    --radius: 0.75rem;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Typography scale */
+    --font-heading: 'Inter', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', Consolas, monospace;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Motion system */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-snappy: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+@layer base {
+  * {
+    @apply border-border;
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+  html {
+    @apply dark;
+  }
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+  body {
+    @apply bg-gradient-to-b from-ink-900 via-ink-900 to-ink-800 text-foreground font-body;
+    @apply min-h-screen;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.015;
+    z-index: -1;
+    background-image: 
+      radial-gradient(circle at 25% 25%, #ffffff 2px, transparent 0),
+      radial-gradient(circle at 75% 75%, #ffffff 1px, transparent 0);
+    background-size: 50px 50px;
+    background-position: 0 0, 25px 25px;
+    pointer-events: none;
+  }
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+  /* Typography improvements */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-semibold;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+  ::-webkit-scrollbar-track {
+    @apply bg-ink-800;
+  }
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+  ::-webkit-scrollbar-thumb {
+    @apply bg-ink-600 rounded-full;
+  }
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-ink-500;
+  }
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+  /* Focus styles */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-900;
+  }
+
+  /* Skip link */
+  .skip-link {
+    @apply absolute -top-10 left-4 z-50 bg-brand-600 text-white px-4 py-2 rounded-md;
+    @apply focus:top-4 transition-all duration-200;
+  }
+}
+
+@layer components {
+  /* Glass panel component */
+  .glass-panel {
+    background: hsl(var(--glass-bg));
+    border: 1px solid hsl(var(--glass-border));
+    backdrop-filter: blur(20px);
+    box-shadow: var(--glass-shadow);
+  }
+
+  /* Glow effects */
+  .glow-brand {
+    box-shadow: 0 0 20px hsl(var(--brand-600) / 0.3);
+  }
+
+  .glow-brand-lg {
+    box-shadow: 0 0 40px hsl(var(--brand-600) / 0.4);
+  }
+
+  /* Interactive states */
+  .interactive {
+    @apply transition-all duration-200 ease-out;
+  }
+
+  .interactive:hover {
+    transform: translateY(-2px);
+  }
+
+  .interactive:active {
+    transform: translateY(0);
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, hsl(var(--brand-400)), hsl(var(--brand-600)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Loading animations */
+  .pulse-subtle {
+    animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-subtle {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--ink-600) / 0.3),
+      transparent
+    );
+    animation: shimmer 2s infinite;
+    content: '';
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
   }
 }
 
