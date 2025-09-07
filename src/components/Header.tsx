@@ -12,6 +12,7 @@ const navigation = [
   { name: "Home", href: "/", icon: Home },
   { name: "Dashboard", href: "/dashboard", icon: BarChart3 },
   { name: "Upload", href: "/upload", icon: Mic },
+  { name: "Profile", href: "/profile", icon: User },
 ];
 
 const Header = () => {

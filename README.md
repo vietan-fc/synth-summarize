@@ -1,73 +1,249 @@
-# Welcome to your Lovable project
+# PodSum - AI Podcast Summarizer
 
-## Project info
+A modern, responsive podcast summarization app built with React, TypeScript, and Tailwind CSS. Transform any podcast into actionable insights with AI-powered summarization.
 
-**URL**: https://lovable.dev/projects/d3d4d5d2-367a-4cb9-8ba7-e2e015fc473f
+## 🚀 Features
 
-## How can I edit this code?
+- **Smart Upload**: Drag & drop audio files or paste podcast URLs
+- **AI Summarization**: Get key takeaways, timestamps, and structured summaries
+- **Multiple Sources**: Supports Spotify, Apple Podcasts, RSS feeds, and direct uploads
+- **Beautiful UI**: Glass morphism design with Spotify × Notion aesthetic
+- **Responsive**: Mobile-first design that works on all devices
+- **Accessibility**: WCAG AA compliant with keyboard navigation
+- **Authentication**: Ready for Firebase Google Sign-In integration
 
-There are several ways of editing your application.
+## 🛠️ Tech Stack
 
-**Use Lovable**
+- **Frontend**: React 18, TypeScript, Tailwind CSS
+- **Router**: React Router v6
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
+- **Build**: Vite
+- **Styling**: Custom design system with glass panels
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/d3d4d5d2-367a-4cb9-8ba7-e2e015fc473f) and start prompting.
+## 📦 Installation
 
-Changes made via Lovable will be committed automatically to this repo.
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd podsum
+   ```
 
-**Use your preferred IDE**
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   # or
+   pnpm install
+   ```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+3. Set up environment variables:
+   ```bash
+   cp .env.example .env.local
+   ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+4. Configure Firebase (optional):
+   ```env
+   NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+   NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+   ```
 
-Follow these steps:
+5. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+6. Open [http://localhost:8080](http://localhost:8080) in your browser
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 🏗️ Project Structure
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+src/
+├── components/          # Reusable UI components
+│   ├── AuthGate.tsx    # Authentication wrapper
+│   ├── Avatar.tsx      # User avatar component
+│   ├── Badge.tsx       # Status badges
+│   ├── Button.tsx      # Button with variants
+│   ├── Container.tsx   # Layout container
+│   ├── EmptyState.tsx  # Empty state illustrations
+│   ├── FileDropzone.tsx # File upload component
+│   ├── Footer.tsx      # App footer
+│   ├── Header.tsx      # Navigation header
+│   ├── Input.tsx       # Form input component
+│   ├── Kbd.tsx         # Keyboard shortcut display
+│   ├── LoadingSpinner.tsx # Loading animations
+│   ├── Pagination.tsx  # Pagination controls
+│   ├── ProgressBar.tsx # Progress indicators
+│   ├── SearchInput.tsx # Search with shortcuts
+│   ├── Skeleton.tsx    # Loading skeletons
+│   ├── SummaryCard.tsx # Podcast summary cards
+│   ├── Tabs.tsx        # Tab navigation
+│   └── Tooltip.tsx     # Tooltip component
+├── pages/              # Page components
+│   ├── Dashboard.tsx   # User dashboard
+│   ├── Landing.tsx     # Landing page
+│   ├── Profile.tsx     # User profile & settings
+│   ├── Summary.tsx     # Summary detail view
+│   └── Upload.tsx      # Upload & processing
+├── lib/                # Utilities and services
+│   ├── api.ts         # API client functions
+│   ├── firebase.ts    # Firebase configuration
+│   ├── firestore.ts   # Database operations
+│   ├── formatting.ts  # Data formatting utils
+│   ├── storage.ts     # File storage operations
+│   └── utils.ts       # General utilities
+├── assets/            # Static assets
+└── App.tsx           # Main application component
 ```
 
-**Edit a file directly in GitHub**
+## 🎨 Design System
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+The app uses a custom design system with:
 
-**Use GitHub Codespaces**
+- **Colors**: Ink (grays) and Brand (blues) color scales
+- **Typography**: Inter font with custom spacing
+- **Components**: Glass panels with backdrop blur
+- **Animations**: Smooth Framer Motion transitions
+- **Icons**: Lucide React icon set
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🔌 API Integration
 
-## What technologies are used for this project?
+The app includes mock API services that can be replaced with real implementations:
 
-This project is built with:
+### Upload Endpoint
+```typescript
+POST /api/upload
+{
+  "type": "file" | "url",
+  "file"?: File,
+  "url"?: string,
+  "options"?: {
+    "lang": string,
+    "detail": "brief" | "standard" | "deep",
+    "timestamps": boolean
+  }
+}
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Summary Endpoints
+```typescript
+GET /api/summaries/:id      # Get single summary
+GET /api/summaries          # List summaries with pagination
+```
 
-## How can I deploy this project?
+## 🔥 Firebase Integration
 
-Simply open [Lovable](https://lovable.dev/projects/d3d4d5d2-367a-4cb9-8ba7-e2e015fc473f) and click on Share -> Publish.
+Ready for Firebase integration with:
 
-## Can I connect a custom domain to my Lovable project?
+- **Authentication**: Google Sign-In setup
+- **Firestore**: User and summary data models
+- **Storage**: Audio file uploads
+- **Security**: RLS policies for user data
 
-Yes, you can!
+## ♿ Accessibility
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- Semantic HTML structure
+- ARIA labels and roles
+- Keyboard navigation support
+- Focus management
+- Color contrast compliance
+- Screen reader optimization
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## 🎯 Key Features Implementation
+
+### Landing Page
+- Hero section with gradient text effects
+- Interactive file upload demo
+- "How it works" animated steps
+- Social proof and testimonials
+- FAQ section (expandable)
+
+### Upload & Processing
+- Dual upload modes (file/URL)
+- Real-time progress tracking
+- Processing state visualization
+- Advanced options drawer
+- Error handling and retry
+
+### Dashboard
+- Search with keyboard shortcuts
+- Filter and sort options
+- Summary cards with actions
+- Usage statistics
+- Pagination support
+
+### Summary Detail
+- Structured summary display
+- Timestamp navigation
+- Copy/download/share actions
+- Regeneration options
+- Sidebar metadata
+
+### Profile & Settings
+- User account management
+- Usage statistics
+- Privacy controls
+- Data export
+- Account deletion
+
+## 🚀 Deployment
+
+1. Build the application:
+   ```bash
+   npm run build
+   ```
+
+2. Preview the build:
+   ```bash
+   npm run preview
+   ```
+
+3. Deploy to your preferred platform:
+   - Vercel: `vercel deploy`
+   - Netlify: Connect repository
+   - Firebase Hosting: `firebase deploy`
+
+## 📝 Environment Variables
+
+```env
+# Firebase Configuration
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+
+# API Configuration (if using external APIs)
+API_BASE_URL=
+API_KEY=
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'Add amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙋‍♂️ Support
+
+If you have any questions or need help, please:
+
+1. Check the [documentation](docs/)
+2. Open an [issue](issues/)
+3. Join our [Discord community](discord-link)
+
+---
+
+Made with ❤️ for podcast lovers everywhere
