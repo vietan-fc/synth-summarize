@@ -1,50 +1,26 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { User, LogIn } from "lucide-react";
 import Button from "./Button";
+import { useAuth } from "@/lib/firebase";
 
 interface AuthGateProps {
   children: React.ReactNode;
   fallback?: React.ReactNode;
 }
 
-// Mock auth hook - replace with real Firebase auth
-const useAuth = () => {
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Simulate auth check
-    const timer = setTimeout(() => {
-      // For demo purposes, simulate no user logged in
-      setUser(null);
-      setLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const signIn = async () => {
-    // TODO: Implement Firebase Google Sign-In
-    setLoading(true);
-    setTimeout(() => {
-      setUser({ name: "John Doe", email: "john@example.com" });
-      setLoading(false);
-    }, 1000);
-  };
-
-  const signOut = () => {
-    // TODO: Implement Firebase sign out
-    setUser(null);
-  };
-
-  return { user, loading, signIn, signOut };
-};
-
 const AuthGate = ({ children, fallback }: AuthGateProps) => {
   const { user, loading, signIn } = useAuth();
+
+  const handleSignIn = async () => {
+    try {
+      await signIn();
+    } catch (error) {
+      console.error('Sign in failed:', error);
+      // TODO: Show error toast
+    }
+  };
 
   if (loading) {
     return (
@@ -80,7 +56,7 @@ const AuthGate = ({ children, fallback }: AuthGateProps) => {
               variant="hero"
               size="lg"
               className="w-full"
-              onClick={signIn}
+              onClick={handleSignIn}
             >
               <LogIn className="w-5 h-5" />
               Sign in with Google
@@ -99,4 +75,3 @@ const AuthGate = ({ children, fallback }: AuthGateProps) => {
 };
 
 export default AuthGate;
-export { useAuth };

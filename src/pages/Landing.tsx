@@ -1,11 +1,48 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Upload, Link2, CheckCircle, Clock, Users, Star, Mic } from "lucide-react";
+import { ArrowRight, Upload, Link2, CheckCircle, Clock, Users, Star, Mic, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import Container from "@/components/Container";
 import Button from "@/components/Button";
 import FileDropzone from "@/components/FileDropzone";
+import Kbd from "@/components/Kbd";
+
+// FAQ Item Component
+const FAQItem = ({ question, answer, index }: { question: string; answer: string; index: number }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 1.6 + index * 0.1, duration: 0.6 }}
+      className="glass-panel rounded-xl overflow-hidden mb-4"
+    >
+      <button
+        className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-ink-800/30 transition-colors focus-ring"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="text-lg font-medium text-ink-100">{question}</span>
+        <ChevronDown 
+          className={`w-5 h-5 text-ink-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+        />
+      </button>
+      {isOpen && (
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: "auto", opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="px-6 pb-4"
+        >
+          <p className="text-ink-300 leading-relaxed">{answer}</p>
+        </motion.div>
+      )}
+    </motion.div>
+  );
+};
 
 const Landing = () => {
   const handleFileSelect = (file: File) => {
@@ -44,7 +81,7 @@ const Landing = () => {
                 Upload audio files or paste podcast URLs to get AI-powered summaries instantly.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
                 <Link to="/upload">
                   <Button
                     variant="hero"
@@ -66,6 +103,25 @@ const Landing = () => {
                     Paste Link
                   </Button>
                 </Link>
+              </div>
+
+              {/* Keyboard Shortcuts */}
+              <div className="flex flex-wrap justify-center items-center gap-4 mb-12 text-ink-400 text-sm">
+                <div className="flex items-center gap-2">
+                  <span>Press</span>
+                  <Kbd>U</Kbd>
+                  <span>to upload</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span>Press</span>
+                  <Kbd>D</Kbd>
+                  <span>for dashboard</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span>Press</span>
+                  <Kbd>/</Kbd>
+                  <span>to search</span>
+                </div>
               </div>
 
               {/* Trust Badges */}
@@ -318,13 +374,59 @@ const Landing = () => {
         </Container>
       </section>
 
-      {/* CTA Section */}
+      {/* FAQ Section */}
       <section className="py-16 border-t border-ink-800">
         <Container>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.4, duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl font-bold gradient-text mb-4">
+              Frequently asked questions
+            </h2>
+            <p className="text-xl text-ink-300">
+              Everything you need to know about PodSum
+            </p>
+          </motion.div>
+
+          <div className="max-w-3xl mx-auto">
+            {[
+              {
+                question: "What podcast formats do you support?",
+                answer: "We support MP3, M4A, and WAV audio files up to 200MB. You can also paste URLs from Spotify, Apple Podcasts, Google Podcasts, and any RSS feed."
+              },
+              {
+                question: "How accurate are the AI summaries?",
+                answer: "Our AI models achieve 95%+ accuracy in capturing key insights. We use advanced transcription and natural language processing to identify main themes, action items, and memorable quotes."
+              },
+              {
+                question: "Can I customize the summary format?",
+                answer: "Yes! Choose from Brief (key points only), Standard (detailed insights), or Deep (comprehensive analysis). You can also toggle timestamps and adjust bullet point density."
+              },
+              {
+                question: "Is my data secure and private?",
+                answer: "Absolutely. Audio files are processed securely and deleted after 30 days. We never share your content or personal data with third parties. All summaries are private to your account."
+              },
+              {
+                question: "Do you offer team or business plans?",
+                answer: "Yes! We have team plans with shared workspaces, collaboration features, and volume discounts. Contact us for custom enterprise solutions."
+              }
+            ].map((faq, index) => (
+              <FAQItem key={index} question={faq.question} answer={faq.answer} index={index} />
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 border-t border-ink-800">
+        <Container>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.8, duration: 0.6 }}
             className="text-center"
           >
             <h2 className="text-4xl font-bold gradient-text mb-4">

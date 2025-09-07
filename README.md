@@ -40,17 +40,23 @@ A modern, responsive podcast summarization app built with React, TypeScript, and
 
 3. Set up environment variables:
    ```bash
-   cp .env.example .env.local
+   # Create a .env.local file with your Firebase configuration
+   touch .env.local
    ```
 
-4. Configure Firebase (optional):
+4. Configure Firebase (required for full functionality):
    ```env
-   NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
-   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-   NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+   # Add these to your .env.local file
+   VITE_FIREBASE_API_KEY=your_firebase_api_key_here
+   VITE_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
+   VITE_FIREBASE_PROJECT_ID=your_project_id
+   VITE_FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com
+   VITE_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+   VITE_FIREBASE_APP_ID=your_app_id
+   
+   # Optional API configuration
+   VITE_API_BASE_URL=http://localhost:3000/api
+   VITE_APP_ENV=development
    ```
 
 5. Start the development server:
@@ -211,17 +217,22 @@ Ready for Firebase integration with:
 ## 📝 Environment Variables
 
 ```env
-# Firebase Configuration
-NEXT_PUBLIC_FIREBASE_API_KEY=
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
-NEXT_PUBLIC_FIREBASE_APP_ID=
+# Firebase Configuration (Required)
+VITE_FIREBASE_API_KEY=your_firebase_api_key_here
+VITE_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
 
-# API Configuration (if using external APIs)
-API_BASE_URL=
-API_KEY=
+# API Configuration (Optional)
+VITE_API_BASE_URL=http://localhost:3000/api
+VITE_API_KEY=your_api_key_here
+
+# App Configuration
+VITE_APP_ENV=development
+VITE_APP_NAME=PodSum
+VITE_APP_VERSION=1.0.0
 ```
 
 ## 🤝 Contributing

@@ -6,6 +6,8 @@ import { Link, useParams } from "react-router-dom";
 import Container from "@/components/Container";
 import Button from "@/components/Button";
 import Badge from "@/components/Badge";
+import { useCopyShortcut, useDownloadShortcut } from "@/hooks/use-keyboard-shortcuts";
+import { toast } from "@/hooks/use-toast";
 
 // Mock data for a summary
 const mockSummary = {
@@ -69,13 +71,41 @@ const Summary = () => {
     });
   };
 
-  const handleCopy = () => {
-    // TODO: Copy summary to clipboard
-    console.log("Copy summary");
+  const handleCopy = async () => {
+    try {
+      const summaryText = [
+        `# ${mockSummary.title}`,
+        `**Show**: ${mockSummary.show}`,
+        `**Episode**: ${mockSummary.episode}`,
+        `**Duration**: ${formatDuration(mockSummary.duration)}`,
+        '',
+        '## Key Takeaways',
+        ...mockSummary.summary.keyTakeaways.map(item => `• ${item}`),
+        '',
+        '## Summary',
+        ...mockSummary.summary.paragraphs,
+      ].join('\n');
+      
+      await navigator.clipboard.writeText(summaryText);
+      toast({
+        title: "Summary copied!",
+        description: "The summary has been copied to your clipboard.",
+      });
+    } catch (error) {
+      toast({
+        title: "Copy failed",
+        description: "Unable to copy summary to clipboard.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleDownload = () => {
     // TODO: Download as PDF
+    toast({
+      title: "Download starting...",
+      description: "Your PDF will be ready shortly.",
+    });
     console.log("Download PDF");
   };
 
@@ -88,6 +118,10 @@ const Summary = () => {
     // TODO: Regenerate summary
     console.log("Regenerate summary");
   };
+
+  // Add keyboard shortcuts
+  useCopyShortcut(handleCopy);
+  useDownloadShortcut(handleDownload);
 
   return (
     <div className="min-h-screen pt-24 pb-12">

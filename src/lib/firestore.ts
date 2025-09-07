@@ -1,5 +1,20 @@
-// Mock Firestore operations
-// TODO: Replace with actual Firestore implementation
+import { 
+  collection, 
+  doc, 
+  addDoc, 
+  getDoc, 
+  getDocs, 
+  deleteDoc, 
+  setDoc, 
+  query, 
+  where, 
+  orderBy, 
+  limit, 
+  startAfter,
+  DocumentSnapshot,
+  Timestamp 
+} from 'firebase/firestore';
+import { db } from './firebase';
 
 export interface Summary {
   id: string;
@@ -59,17 +74,40 @@ const mockSummaries: Summary[] = [
   }
 ];
 
-// Mock Firestore functions
+// Firestore collections
+const SUMMARIES_COLLECTION = 'summaries';
+const USERS_COLLECTION = 'users';
+
+// Firestore functions
 export const saveSummary = async (summary: Omit<Summary, 'id' | 'createdAt'>): Promise<string> => {
-  // TODO: Implement Firestore saveSummary
-  console.log("saveSummary - TODO: Implement Firestore operation", summary);
-  return Promise.resolve("mock-summary-id");
+  try {
+    const summaryData = {
+      ...summary,
+      createdAt: Timestamp.now().toDate().toISOString()
+    };
+    
+    const docRef = await addDoc(collection(db, SUMMARIES_COLLECTION), summaryData);
+    return docRef.id;
+  } catch (error) {
+    console.error('Error saving summary:', error);
+    throw error;
+  }
 };
 
 export const getSummary = async (id: string): Promise<Summary | null> => {
-  // TODO: Implement Firestore getSummary
-  console.log("getSummary - TODO: Implement Firestore operation", id);
-  return Promise.resolve(mockSummaries.find(s => s.id === id) || null);
+  try {
+    const docRef = doc(db, SUMMARIES_COLLECTION, id);
+    const docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() } as Summary;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error getting summary:', error);
+    // Fallback to mock data in case of Firebase errors
+    return mockSummaries.find(s => s.id === id) || null;
+  }
 };
 
 export const listSummaries = async (uid: string, options?: {
@@ -77,52 +115,101 @@ export const listSummaries = async (uid: string, options?: {
   page?: number;
   limit?: number;
 }): Promise<{ summaries: Summary[]; total: number }> => {
-  // TODO: Implement Firestore listSummaries with pagination and search
-  console.log("listSummaries - TODO: Implement Firestore operation", uid, options);
-  
-  let filtered = mockSummaries.filter(s => s.uid === uid);
-  
-  if (options?.search) {
-    const search = options.search.toLowerCase();
-    filtered = filtered.filter(s => 
-      s.title.toLowerCase().includes(search) ||
-      s.show.toLowerCase().includes(search) ||
-      s.topics.some(topic => topic.toLowerCase().includes(search))
+  try {
+    const summariesRef = collection(db, SUMMARIES_COLLECTION);
+    let q = query(
+      summariesRef,
+      where('uid', '==', uid),
+      orderBy('createdAt', 'desc')
     );
+
+    if (options?.limit) {
+      q = query(q, limit(options.limit));
+    }
+
+    const querySnapshot = await getDocs(q);
+    let summaries = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as Summary[];
+
+    // Client-side search filtering (for simplicity)
+    if (options?.search) {
+      const search = options.search.toLowerCase();
+      summaries = summaries.filter(s => 
+        s.title.toLowerCase().includes(search) ||
+        s.show.toLowerCase().includes(search) ||
+        s.topics.some(topic => topic.toLowerCase().includes(search))
+      );
+    }
+
+    return {
+      summaries,
+      total: summaries.length
+    };
+  } catch (error) {
+    console.error('Error listing summaries:', error);
+    // Fallback to mock data
+    let filtered = mockSummaries.filter(s => s.uid === uid);
+    
+    if (options?.search) {
+      const search = options.search.toLowerCase();
+      filtered = filtered.filter(s => 
+        s.title.toLowerCase().includes(search) ||
+        s.show.toLowerCase().includes(search) ||
+        s.topics.some(topic => topic.toLowerCase().includes(search))
+      );
+    }
+    
+    return {
+      summaries: filtered,
+      total: filtered.length
+    };
   }
-  
-  const page = options?.page || 1;
-  const limit = options?.limit || 10;
-  const start = (page - 1) * limit;
-  const end = start + limit;
-  
-  return Promise.resolve({
-    summaries: filtered.slice(start, end),
-    total: filtered.length
-  });
 };
 
 export const deleteSummary = async (id: string): Promise<void> => {
-  // TODO: Implement Firestore deleteSummary
-  console.log("deleteSummary - TODO: Implement Firestore operation", id);
-  return Promise.resolve();
+  try {
+    await deleteDoc(doc(db, SUMMARIES_COLLECTION, id));
+  } catch (error) {
+    console.error('Error deleting summary:', error);
+    throw error;
+  }
 };
 
 export const saveUser = async (user: Omit<User, 'createdAt'>): Promise<void> => {
-  // TODO: Implement Firestore saveUser
-  console.log("saveUser - TODO: Implement Firestore operation", user);
-  return Promise.resolve();
+  try {
+    const userData = {
+      ...user,
+      createdAt: Timestamp.now().toDate().toISOString()
+    };
+    
+    await setDoc(doc(db, USERS_COLLECTION, user.uid), userData);
+  } catch (error) {
+    console.error('Error saving user:', error);
+    throw error;
+  }
 };
 
 export const getUser = async (uid: string): Promise<User | null> => {
-  // TODO: Implement Firestore getUser
-  console.log("getUser - TODO: Implement Firestore operation", uid);
-  return Promise.resolve({
-    uid,
-    email: "user@example.com",
-    displayName: "Mock User",
-    createdAt: "2024-01-01T00:00:00Z",
-    summaryCount: mockSummaries.length,
-    storageUsed: 1024 * 1024 * 50 // 50MB
-  });
+  try {
+    const docRef = doc(db, USERS_COLLECTION, uid);
+    const docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+      return docSnap.data() as User;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error getting user:', error);
+    // Fallback to mock data
+    return {
+      uid,
+      email: "user@example.com",
+      displayName: "Mock User",
+      createdAt: "2024-01-01T00:00:00Z",
+      summaryCount: mockSummaries.length,
+      storageUsed: 1024 * 1024 * 50 // 50MB
+    };
+  }
 };

@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Menu, X, Mic, User, Home, BarChart3 } from "lucide-react";
+import { Menu, X, Mic, User, Home, BarChart3, LogOut } from "lucide-react";
 import Container from "./Container";
 import Button from "./Button";
+import Avatar from "./Avatar";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/firebase";
 
 const navigation = [
   { name: "Home", href: "/", icon: Home },
@@ -19,6 +21,23 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const pathname = location.pathname;
+  const { user, signIn, signOut } = useAuth();
+
+  const handleSignIn = async () => {
+    try {
+      await signIn();
+    } catch (error) {
+      console.error('Sign in failed:', error);
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Sign out failed:', error);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 glass-panel border-b border-ink-700/50">
@@ -63,13 +82,34 @@ const Header = () => {
 
           {/* Auth Section */}
           <div className="hidden md:flex items-center space-x-3">
-            <Button variant="ghost" size="sm">
-              <User className="h-4 w-4" />
-              Sign In
-            </Button>
-            <Button variant="primary" size="sm">
-              Get Started
-            </Button>
+            {user ? (
+              <div className="flex items-center space-x-3">
+                <Link to="/profile">
+                  <Avatar
+                    src={user.photoURL}
+                    fallback={user.displayName || user.email}
+                    size="sm"
+                    className="cursor-pointer hover:ring-2 hover:ring-brand-600 transition-all"
+                  />
+                </Link>
+                <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </Button>
+              </div>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" onClick={handleSignIn}>
+                  <User className="h-4 w-4" />
+                  Sign In
+                </Button>
+                <Link to="/upload">
+                  <Button variant="primary" size="sm">
+                    Get Started
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -116,13 +156,36 @@ const Header = () => {
               })}
             </nav>
             <div className="mt-4 pt-4 border-t border-ink-700/50 space-y-2">
-              <Button variant="ghost" size="sm" className="w-full justify-start">
-                <User className="h-4 w-4" />
-                Sign In
-              </Button>
-              <Button variant="primary" size="sm" className="w-full">
-                Get Started
-              </Button>
+              {user ? (
+                <div className="space-y-2">
+                  <Link to="/profile" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="ghost" size="sm" className="w-full justify-start">
+                      <Avatar
+                        src={user.photoURL}
+                        fallback={user.displayName || user.email}
+                        size="xs"
+                      />
+                      Profile
+                    </Button>
+                  </Link>
+                  <Button variant="ghost" size="sm" className="w-full justify-start" onClick={handleSignOut}>
+                    <LogOut className="h-4 w-4" />
+                    Sign Out
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <Button variant="ghost" size="sm" className="w-full justify-start" onClick={handleSignIn}>
+                    <User className="h-4 w-4" />
+                    Sign In
+                  </Button>
+                  <Link to="/upload" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="primary" size="sm" className="w-full">
+                      Get Started
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </motion.div>
         )}
