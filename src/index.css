@@ -93,13 +93,12 @@
   }
 
   html {
-    @apply dark;
+    @apply bg-gradient-to-b from-ink-900 via-ink-900 to-ink-800 text-foreground font-body min-h-screen;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 
   body {
-    @apply bg-gradient-to-b from-ink-900 via-ink-900 to-ink-800 text-foreground font-body;
     @apply min-h-screen;
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 
   /* Noise texture overlay */
@@ -239,12 +238,3 @@
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-  }
-}
